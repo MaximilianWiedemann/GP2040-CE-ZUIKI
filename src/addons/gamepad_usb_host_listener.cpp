@@ -146,6 +146,8 @@ void GamepadUSBHostListener::process_ctrlr_report(uint8_t dev_addr, uint8_t cons
         case 0x0511:               // Ultrakstik 360
             process_ultrastik360(report, len);
             break;
+        case 0x0004:               // ZUIKI
+            process_zuiki(report, len);
         default:
             break;
     }
@@ -422,6 +424,109 @@ void GamepadUSBHostListener::process_stadia(uint8_t const* report, uint16_t len)
     if (controller_report.GD_GamePadHatSwitch == 5) _controller_host_state.dpad |= GAMEPAD_MASK_DOWN | GAMEPAD_MASK_LEFT;
     if (controller_report.GD_GamePadHatSwitch == 6) _controller_host_state.dpad |= GAMEPAD_MASK_LEFT;
     if (controller_report.GD_GamePadHatSwitch == 7) _controller_host_state.dpad |= GAMEPAD_MASK_LEFT | GAMEPAD_MASK_UP;
+}
+
+void GamepadUSBHostListener::process_zuiki(uint8_t const* report, uint16_t len) {
+    zuiki_report_t controller_report;
+
+    memcpy(&controller_report, report, sizeof(controller_report));
+
+    // Map mascon handle (Y axis) to left stick Y axis (custom values for PS4 version of Densha De Go)
+    switch(controller_report.Y) {
+        case 0x00:
+            _controller_host_state.ly = 0;
+            break;
+        case 0x05:
+            _controller_host_state.ly = 1285;
+            break;
+        case 0x13:
+            _controller_host_state.ly = 4883;
+            break;
+        case 0x20:
+            _controller_host_state.ly = 8224;
+            break;
+        case 0x2e:
+            _controller_host_state.ly = 10000; // TODO: Test
+            break;
+        case 0x3c:
+            _controller_host_state.ly = 11822;
+            break;
+        case 0x49:
+            _controller_host_state.ly = 15420;
+            break;
+        case 0x57:
+            _controller_host_state.ly = 18761;
+            break;
+        case 0x65:
+            _controller_host_state.ly = 22359;
+            break;
+        case 0x80:
+            _controller_host_state.ly = 32896;
+            break;
+        case 0x9f:
+            _controller_host_state.ly = 42500; // TODO: Test
+            break;
+        case 0xb7:
+            _controller_host_state.ly = 47031;
+            break;
+        case 0xce:
+            _controller_host_state.ly = 52942;
+            break;
+        case 0xe6:
+            _controller_host_state.ly = 59110;
+            break;
+        case 0xff:
+            _controller_host_state.ly = 65535;
+            break;
+        default:
+            break;
+    }
+
+    // Map D-Pad (hat switch)
+    _controller_host_state.dpad = 0;
+    switch(controller_report.hat_switch) {
+        case 0:
+            _controller_host_state.dpad |= GAMEPAD_MASK_UP;
+            break;
+        case 1:
+            _controller_host_state.dpad |= GAMEPAD_MASK_UP | GAMEPAD_MASK_RIGHT;
+            break;
+        case 2:
+            _controller_host_state.dpad |= GAMEPAD_MASK_RIGHT;
+            break;
+        case 3:
+            _controller_host_state.dpad |= GAMEPAD_MASK_RIGHT | GAMEPAD_MASK_DOWN;
+            break;
+        case 4:
+            _controller_host_state.dpad |= GAMEPAD_MASK_DOWN;
+            break;
+        case 5:
+            _controller_host_state.dpad |= GAMEPAD_MASK_DOWN | GAMEPAD_MASK_LEFT;
+            break;
+        case 6:
+            _controller_host_state.dpad |= GAMEPAD_MASK_LEFT;
+            break;
+        case 7:
+            _controller_host_state.dpad |= GAMEPAD_MASK_LEFT | GAMEPAD_MASK_UP;
+            break;
+        default:
+            break;
+    }
+
+    // Map buttons according to Zuiki Mascon button mapping
+    _controller_host_state.buttons = 0;
+    if (controller_report.BTN_Button1 == 1)  _controller_host_state.buttons |= GAMEPAD_MASK_B3;  // Button 0 -> B3
+    if (controller_report.BTN_Button2 == 1)  _controller_host_state.buttons |= GAMEPAD_MASK_B1;  // Button 1 -> B1
+    if (controller_report.BTN_Button3 == 1)  _controller_host_state.buttons |= GAMEPAD_MASK_B2;  // Button 2 -> B2
+    if (controller_report.BTN_Button4 == 1)  _controller_host_state.buttons |= GAMEPAD_MASK_B4;  // Button 3 -> B4
+    if (controller_report.BTN_Button5 == 1)  _controller_host_state.buttons |= GAMEPAD_MASK_L1;  // Button 4 -> L1
+    if (controller_report.BTN_Button6 == 1)  _controller_host_state.buttons |= GAMEPAD_MASK_R1;  // Button 5 -> R1
+    if (controller_report.BTN_Button7 == 1)  _controller_host_state.buttons |= GAMEPAD_MASK_L2;  // Button 6 -> L2
+    if (controller_report.BTN_Button8 == 1)  _controller_host_state.buttons |= GAMEPAD_MASK_R2;  // Button 7 -> R2
+    if (controller_report.BTN_Button9 == 1)  _controller_host_state.buttons |= GAMEPAD_MASK_S1;  // Button 8 -> S1
+    if (controller_report.BTN_Button10 == 1) _controller_host_state.buttons |= GAMEPAD_MASK_S2;  // Button 9 -> S2
+    if (controller_report.BTN_Button13 == 1) _controller_host_state.buttons |= GAMEPAD_MASK_A1;  // Button 12 -> A1
+    if (controller_report.BTN_Button14 == 1) _controller_host_state.buttons |= GAMEPAD_MASK_A2;  // Button 13 -> A2
 }
 
 void GamepadUSBHostListener::setup_df_wheel() {

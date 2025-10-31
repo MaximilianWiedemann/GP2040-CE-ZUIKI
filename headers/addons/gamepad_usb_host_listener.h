@@ -75,6 +75,43 @@ typedef struct TU_ATTR_PACKED
 
 } ultrastik360_t;
 
+// Zuiki Mascon controller report struct
+typedef struct TU_ATTR_PACKED
+{
+    // Byte 0: 14 buttons + 2 padding bits
+    uint8_t BTN_Button1 : 1;                    // Button 0 -> B3
+    uint8_t BTN_Button2 : 1;                    // Button 1 -> B1
+    uint8_t BTN_Button3 : 1;                    // Button 2 -> B2
+    uint8_t BTN_Button4 : 1;                    // Button 3 -> B4
+    uint8_t BTN_Button5 : 1;                    // Button 4 -> L1
+    uint8_t BTN_Button6 : 1;                    // Button 5 -> R1
+    uint8_t BTN_Button7 : 1;                    // Button 6 -> L2
+    uint8_t BTN_Button8 : 1;                    // Button 7 -> R2
+    
+    // Byte 1: Buttons 9-14 + 2 padding bits
+    uint8_t BTN_Button9 : 1;                    // Button 8 -> S1
+    uint8_t BTN_Button10 : 1;                   // Button 9 -> S2
+    uint8_t BTN_Button11 : 1;                   // Button 10 (unused)
+    uint8_t BTN_Button12 : 1;                   // Button 11 (unused)
+    uint8_t BTN_Button13 : 1;                   // Button 12 -> A1
+    uint8_t BTN_Button14 : 1;                   // Button 13 -> A2
+    uint8_t : 2;                                // Padding (2 bits)
+    
+    // Byte 2: Hat switch (4 bits) + padding (4 bits)
+    uint8_t hat_switch : 4;                     // Hat switch (D-Pad)
+    uint8_t : 4;                                // Padding
+    
+    // Byte 3-6: Analog axes (X, Y, Z, Rz)
+    uint8_t X;                                  // X axis
+    uint8_t Y;                                  // Y axis (Mascon handle)
+    uint8_t Z;                                  // Z axis
+    uint8_t Rz;                                 // Rz axis
+    
+    // Byte 7: Padding (8 bits)
+    uint8_t : 8;                                // Padding
+    
+} zuiki_report_t;
+
 typedef struct __attribute__((packed)) {
     uint8_t reportID;
     uint8_t leftStickX;
@@ -152,6 +189,8 @@ class GamepadUSBHostListener : public USBListener {
         void process_stadia(uint8_t const* report, uint16_t len);
 
         void process_ultrastik360(uint8_t const* report, uint16_t len);
+
+        void process_zuiki(uint8_t const* report, uint16_t len);
 
         uint16_t controller_pid, controller_vid;
 

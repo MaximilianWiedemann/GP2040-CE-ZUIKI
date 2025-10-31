@@ -7,6 +7,11 @@
 <p align="center">
   Multi-Platform Gamepad Firmware for RP2040
 </p>
+<p align="center">
+  <em>
+    Fork with support for the Zuiki MasCon controller (aka. Densha De Go controller) for the Nintendo Switch
+  </em>
+</p>
 
 <p align="center">
   <img src="https://img.shields.io/github/license/OpenStickCommunity/GP2040-CE" />
@@ -23,6 +28,86 @@
 <p>
   GP2040-CE is compatible with PC, PS3, PS4, PS5, Nintendo Switch, Xbox One, Steam Deck, MiSTer and Android.
 </p>
+
+## Zuiki MasCon support
+
+This fork adds support for the Zuiki MasCon controller for the Nintendo Switch in USB host mode. All buttons are mapped to match the PS4's controller layout, and the handle is mapped the left analog stick to match the PS4's version of `Densha de Go!! Hashirou Yamanote-sen` expected controller inputs.
+
+Please note that in order to use this with an actual PS4, you need to either use a USB hub with both PS4 controller for authentication (and the MasCon controller) or use uploaded key files.
+
+### Playing Densha De Go on PS4
+
+The following ingame settings are recommended:
+
+- Set control type to `スタンダード` (engl. `Standard`)
+- Set input type to `ダイレクト` (engl. `Direct`)
+
+### Technical information (USB HID Descriptor data)
+
+```
+33DD:0004: (unnamed manufacturer) - ZUIKI MasCon for Nintendo Switch BLUE
+PATH:\\?\hid#vid_33dd&pid_0004#7&22c8daf6&0&0000#{4d1e55b2-f16f-11cf-88cb-001111000030}
+DESCRIPTOR:
+
+0x05, 0x01,        // Usage Page (Generic Desktop Ctrls)
+0x09, 0x05,        // Usage (Game Pad)
+0xA1, 0x01,        // Collection (Application)
+0x05, 0x09,        //   Usage Page (Button)
+0x19, 0x01,        //   Usage Minimum (0x01)
+0x29, 0x0E,        //   Usage Maximum (0x0E)
+0x15, 0x00,        //   Logical Minimum (0)
+0x25, 0x01,        //   Logical Maximum (1)
+0x35, 0x00,        //   Physical Minimum (0)
+0x45, 0x01,        //   Physical Maximum (1)
+0x65, 0x00,        //   Unit (None)
+0x55, 0x00,        //   Unit Exponent (0)
+0x75, 0x01,        //   Report Size (1)
+0x95, 0x0E,        //   Report Count (14)
+0x81, 0x02,        //   Input (Data,Var,Abs,No Wrap,Linear,Preferred State,No Null Position)
+0x95, 0x02,        //   Report Count (2)
+0x81, 0x03,        //   Input (Const,Var,Abs,No Wrap,Linear,Preferred State,No Null Position)
+0x05, 0x01,        //   Usage Page (Generic Desktop Ctrls)
+0x09, 0x39,        //   Usage (Hat switch)
+0x25, 0x07,        //   Logical Maximum (7)
+0x46, 0x3B, 0x01,  //   Physical Maximum (315)
+0x65, 0x14,        //   Unit (System: English Rotation, Length: Centimeter)
+0x75, 0x04,        //   Report Size (4)
+0x95, 0x01,        //   Report Count (1)
+0x81, 0x42,        //   Input (Data,Var,Abs,No Wrap,Linear,Preferred State,Null State)
+0x25, 0x01,        //   Logical Maximum (1)
+0x45, 0x01,        //   Physical Maximum (1)
+0x65, 0x00,        //   Unit (None)
+0x75, 0x01,        //   Report Size (1)
+0x95, 0x04,        //   Report Count (4)
+0x81, 0x03,        //   Input (Const,Var,Abs,No Wrap,Linear,Preferred State,No Null Position)
+0x09, 0x30,        //   Usage (X)
+0x25, 0xFF,        //   Logical Maximum (-1)
+0x45, 0xFF,        //   Physical Maximum (-1)
+0x75, 0x08,        //   Report Size (8)
+0x95, 0x01,        //   Report Count (1)
+0x81, 0x02,        //   Input (Data,Var,Abs,No Wrap,Linear,Preferred State,No Null Position)
+0x09, 0x31,        //   Usage (Y)
+0x81, 0x02,        //   Input (Data,Var,Abs,No Wrap,Linear,Preferred State,No Null Position)
+0x09, 0x32,        //   Usage (Z)
+0x81, 0x02,        //   Input (Data,Var,Abs,No Wrap,Linear,Preferred State,No Null Position)
+0x09, 0x35,        //   Usage (Rz)
+0x81, 0x02,        //   Input (Data,Var,Abs,No Wrap,Linear,Preferred State,No Null Position)
+0x25, 0x01,        //   Logical Maximum (1)
+0x45, 0x01,        //   Physical Maximum (1)
+0x75, 0x01,        //   Report Size (1)
+0x95, 0x08,        //   Report Count (8)
+0x81, 0x03,        //   Input (Const,Var,Abs,No Wrap,Linear,Preferred State,No Null Position)
+0x0A, 0x4F, 0x48,  //   Usage (0x484F)
+0x25, 0xFF,        //   Logical Maximum (-1)
+0x45, 0xFF,        //   Physical Maximum (-1)
+0x75, 0x08,        //   Report Size (8)
+0x91, 0x02,        //   Output (Data,Var,Abs,No Wrap,Linear,Preferred State,No Null Position,Non-volatile)
+0x0A, 0x4F, 0x48,  //   Usage (0x484F)
+0xB1, 0x02,        //   Feature (Data,Var,Abs,No Wrap,Linear,Preferred State,No Null Position,Non-volatile)
+0xC1, 0x00,        // End Collection
+
+// 115 bytes
+```
 
 ## Links
 
