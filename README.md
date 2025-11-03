@@ -31,16 +31,24 @@
 
 ## Zuiki MasCon support
 
-This fork adds support for the Zuiki MasCon controller for the Nintendo Switch in USB host mode. All buttons are mapped to match the PS4's controller layout, and the handle is mapped the left analog stick to match the PS4's version of `Densha de Go!! Hashirou Yamanote-sen` expected controller inputs.
+This fork adds support for the Zuiki MasCon controller for the Nintendo Switch in USB host mode. All buttons are mapped to match the PS4's controller layout, and the handle is mapped the left analog stick. The mapping is configurable to either be linear or to exactly match the PS4's version of `Densha de Go!! Hashirou Yamanote-sen` expected controller inputs.
 
 Please note that in order to use this with an actual PS4, you need to either use a USB hub with both PS4 controller for authentication (and the MasCon controller) or use uploaded key files.
 
 ### Playing Densha De Go on PS4
 
+In the web UI, go to addons, enable USB host and set the Zuiki mode to:
+- Normal
+  - Linear mapping of MasCon handle to left analog stick
+- DDG PS4 - Regular
+  - Adjusted mapping of MasCon handle to match Densha De Go's expected controller inputs
+- DDG PS4 - Extended *(Recommended)*
+  - In addition to regular, handle is also mapped to left and right stick's X axis for older Yamanote series
+
 The following ingame settings are recommended:
 
-- Set control type to `スタンダード` (engl. `Standard`)
-- Set input type to `ダイレクト` (engl. `Direct`)
+- Control type: `スタンダード` (engl. `Standard`)
+- Input type: `ダイレクト` (engl. `Direct`)
 
 ### Technical information (USB HID Descriptor data)
 

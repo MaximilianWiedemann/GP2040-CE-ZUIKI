@@ -755,6 +755,7 @@ message KeyboardHostOptions
 message GamepadUSBHostOptions
 {
     optional bool enabled = 1;
+    optional ZuikiMode zuikiMode = 2;
 }
 
 message FocusModeOptions

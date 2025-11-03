@@ -1807,6 +1807,7 @@ std::string setAddonOptions()
 
     GamepadUSBHostOptions& gamepadUSBHostOptions = Storage::getInstance().getAddonOptions().gamepadUSBHostOptions;
     docToValue(gamepadUSBHostOptions.enabled, doc, "GamepadUSBHostAddonEnabled");
+    docToValue(gamepadUSBHostOptions.zuikiMode, doc, "GamepadUSBHostAddonZuikiMode");
 
     AnalogADS1256Options& ads1256Options = Storage::getInstance().getAddonOptions().analogADS1256Options;
     docToValue(ads1256Options.enabled, doc, "Analog1256Enabled");
@@ -2255,6 +2256,7 @@ std::string getAddonOptions()
 
     const GamepadUSBHostOptions& gamepadUSBHostOptions = Storage::getInstance().getAddonOptions().gamepadUSBHostOptions;
     writeDoc(doc, "GamepadUSBHostAddonEnabled", gamepadUSBHostOptions.enabled);
+    writeDoc(doc, "GamepadUSBHostAddonZuikiMode", gamepadUSBHostOptions.zuikiMode);
 
     AnalogADS1256Options& ads1256Options = Storage::getInstance().getAddonOptions().analogADS1256Options;
     writeDoc(doc, "Analog1256Enabled", ads1256Options.enabled);

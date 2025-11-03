@@ -11,6 +11,10 @@
 #define GAMEPAD_USB_HOST_ENABLED 0
 #endif
 
+#ifndef DEFAULT_ZUIKI_MODE
+#define DEFAULT_ZUIKI_MODE ZUIKI_NORMAL
+#endif
+
 // GamepadUSBHost Module Name
 #define GamepadUSBHostName "GamepadUSBHost"
 

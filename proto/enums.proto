@@ -694,3 +694,12 @@ enum MouseMovementMode
     MOUSE_MOVEMENT_LEFT_ANALOG = 1;
     MOUSE_MOVEMENT_RIGHT_ANALOG = 2;
 };
+
+enum ZuikiMode
+{
+    option (nanopb_enumopt).long_names = false;
+
+    ZUIKI_NORMAL = 0;
+    ZUIKI_DDG_REGULAR = 1;
+    ZUIKI_DDG_EXTENDED = 2;
+}

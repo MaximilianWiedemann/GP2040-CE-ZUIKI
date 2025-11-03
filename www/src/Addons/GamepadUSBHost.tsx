@@ -1,24 +1,37 @@
 import { useContext } from 'react';
-import { FormCheck, FormLabel } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { FormCheck, FormLabel, Row } from 'react-bootstrap';
+import FormSelect from '../Components/FormSelect';
 import * as yup from 'yup';
 
 import Section from '../Components/Section';
 
 import { AppContext } from '../Contexts/AppContext';
 import { AddonPropTypes } from '../Pages/AddonsConfigPage';
+import { ZUIKI_MODES } from '../Data/Addons';
 
 export const gamepadUSBHostScheme = {
 	GamepadUSBHostAddonEnabled: yup
 		.number()
 		.required()
 		.label('Gamepad USB Host Add-On Enabled'),
+	GamepadUSBHostAddonZuikiMode: yup
+		.number()
+		.required()
+		.label('Zuiki mode')
+		.validateSelectionWhenValue(
+			'GamepadUSBHostAddonEnabled',
+			ZUIKI_MODES,
+		),
 };
 
 export const gamepadUSBHostState = {
 	GamepadUSBHostAddonEnabled: 0,
+	GamepadUSBHostAddonZuikiMode: 0,
 };
 
-const GamepadUSBHost = ({ values, handleChange, handleCheckbox }: AddonPropTypes) => {
+const GamepadUSBHost = ({ values, errors, handleChange, handleCheckbox }: AddonPropTypes) => {
+	const { t } = useTranslation();
 	const { getAvailablePeripherals } = useContext(AppContext);
 	return (
 		<Section title={
@@ -35,6 +48,28 @@ const GamepadUSBHost = ({ values, handleChange, handleCheckbox }: AddonPropTypes
 				<div className="alert alert-info" role="alert">
 					Currently incompatible with Keyboard/Mouse Host addon.
 				</div>
+
+				<Row className="mb-3">
+					<FormSelect
+						label={t('AddonsConfig:usb-host-zuiki-mode-label')}
+						name="GamepadUSBHostAddonZuikiMode"
+						className="form-select-sm"
+						groupClassName="col-sm-3 mb-3"
+						value={values.GamepadUSBHostAddonZuikiMode}
+						error={errors.GamepadUSBHostAddonZuikiMode}
+						isInvalid={Boolean(errors.GamepadUSBHostAddonZuikiMode)}
+						onChange={handleChange}
+					>
+						{ZUIKI_MODES.map((o, i) => (
+							<option
+								key={`button-GamepadUSBHostAddonZuikiMode-option-${i}`}
+								value={o.value}
+							>
+								{t(`AddonsConfig:usb-host-zuiki-mode-${i}`)}
+							</option>
+						))}
+					</FormSelect>
+				</Row>
 			</div>
 			{getAvailablePeripherals('usb') ? (
 					<FormCheck

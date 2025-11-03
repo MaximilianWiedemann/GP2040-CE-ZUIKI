@@ -1019,6 +1019,7 @@ void ConfigUtils::initUnsetPropertiesWithDefaults(Config& config)
 
     // addonOptions.gamepadUSBHostOptions
     INIT_UNSET_PROPERTY(config.addonOptions.gamepadUSBHostOptions, enabled, GAMEPAD_USB_HOST_ENABLED)
+    INIT_UNSET_PROPERTY(config.addonOptions.gamepadUSBHostOptions, zuikiMode, DEFAULT_ZUIKI_MODE)
 
     // Macro options (always on)
     INIT_UNSET_PROPERTY(config.addonOptions.macroOptions, enabled, true);

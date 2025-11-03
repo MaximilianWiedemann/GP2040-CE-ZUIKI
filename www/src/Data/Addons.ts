@@ -30,3 +30,9 @@ export const SOCD_MODES = [
 	{ label: 'First Win', value: 3 },
 	{ label: 'SOCD Cleaning Off', value: 4 },
 ];
+
+export const ZUIKI_MODES = [
+	{ label: 'Normal', value: 0 },
+	{ label: 'DDG PS4 - Simple', value: 1 },
+	{ label: 'DDG PS4 - Extended', value: 2 },
+];

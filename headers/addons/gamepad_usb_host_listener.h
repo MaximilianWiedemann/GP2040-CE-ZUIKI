@@ -191,6 +191,10 @@ class GamepadUSBHostListener : public USBListener {
         void process_ultrastik360(uint8_t const* report, uint16_t len);
 
         void process_zuiki(uint8_t const* report, uint16_t len);
+        uint16_t map_zuiki_ly(ZuikiMode mode, uint8_t value);
+        uint16_t map_zuiki_rx(ZuikiMode mode, uint8_t value);
+        uint16_t map_zuiki_lx(ZuikiMode mode, uint8_t value);
+        uint16_t map_zuiki(uint8_t value);
 
         uint16_t controller_pid, controller_vid;
 

@@ -427,61 +427,16 @@ void GamepadUSBHostListener::process_stadia(uint8_t const* report, uint16_t len)
 }
 
 void GamepadUSBHostListener::process_zuiki(uint8_t const* report, uint16_t len) {
+    const ZuikiMode mode = Storage::getInstance().getAddonOptions().gamepadUSBHostOptions.zuikiMode;
+
     zuiki_report_t controller_report;
 
     memcpy(&controller_report, report, sizeof(controller_report));
 
-    // Map mascon handle (Y axis) to left stick Y axis (custom values for PS4 version of Densha De Go)
-    switch(controller_report.Y) {
-        case 0x00:
-            _controller_host_state.ly = 0;
-            break;
-        case 0x05:
-            _controller_host_state.ly = 1285;
-            break;
-        case 0x13:
-            _controller_host_state.ly = 4883;
-            break;
-        case 0x20:
-            _controller_host_state.ly = 8224;
-            break;
-        case 0x2e:
-            _controller_host_state.ly = 10000; // TODO: Test
-            break;
-        case 0x3c:
-            _controller_host_state.ly = 11822;
-            break;
-        case 0x49:
-            _controller_host_state.ly = 15420;
-            break;
-        case 0x57:
-            _controller_host_state.ly = 18761;
-            break;
-        case 0x65:
-            _controller_host_state.ly = 22359;
-            break;
-        case 0x80:
-            _controller_host_state.ly = 32896;
-            break;
-        case 0x9f:
-            _controller_host_state.ly = 42500; // TODO: Test
-            break;
-        case 0xb7:
-            _controller_host_state.ly = 47031;
-            break;
-        case 0xce:
-            _controller_host_state.ly = 52942;
-            break;
-        case 0xe6:
-            _controller_host_state.ly = 59110;
-            break;
-        case 0xff:
-            _controller_host_state.ly = 65535;
-            break;
-        default:
-            break;
-    }
-
+    _controller_host_state.ly = map_zuiki_ly(mode, controller_report.Y);
+    _controller_host_state.rx = map_zuiki_rx(mode, controller_report.Y);
+    _controller_host_state.lx = map_zuiki_lx(mode, controller_report.Y);
+    
     // Map D-Pad (hat switch)
     _controller_host_state.dpad = 0;
     switch(controller_report.hat_switch) {
@@ -527,6 +482,83 @@ void GamepadUSBHostListener::process_zuiki(uint8_t const* report, uint16_t len) 
     if (controller_report.BTN_Button10 == 1) _controller_host_state.buttons |= GAMEPAD_MASK_S2;  // Button 9 -> S2
     if (controller_report.BTN_Button13 == 1) _controller_host_state.buttons |= GAMEPAD_MASK_A1;  // Button 12 -> A1
     if (controller_report.BTN_Button14 == 1) _controller_host_state.buttons |= GAMEPAD_MASK_A2;  // Button 13 -> A2
+}
+
+uint16_t GamepadUSBHostListener::map_zuiki_ly(ZuikiMode mode, uint8_t value) {
+    if (mode == ZUIKI_NORMAL) {
+        return map_zuiki(value);
+    }
+
+    switch (value) {
+        case 0x2e: // B5
+            return map_zuiki(0x27);
+        case 0x3c: // B4
+            return map_zuiki(0x2e);
+        case 0x49: // B3
+            return map_zuiki(0x3c);
+        case 0x57: // B2
+            return map_zuiki(0x49);
+        case 0x65: // B1
+            return map_zuiki(0x57);
+        case 0x9f: // P1
+            return map_zuiki(0xa5);
+        default: // EB, B8, B7, B6, N, P2, P3, P4, P5
+            return map_zuiki(value);
+    }
+}
+
+uint16_t GamepadUSBHostListener::map_zuiki_rx(ZuikiMode mode, uint8_t value) {
+    if (mode == ZUIKI_NORMAL || mode == ZUIKI_DDG_REGULAR) {
+        return GAMEPAD_JOYSTICK_MID;
+    }
+
+    switch (value) {
+        case 0x00: // EB
+            return map_zuiki(0xff);
+        case 0x05: // B8
+            return map_zuiki(0xfa);
+        case 0x13: // B7
+            return map_zuiki(0xec);
+        case 0x20: // B6
+            return map_zuiki(0xdf);
+        case 0x2e: // B5
+            return map_zuiki(0xd8);
+        case 0x3c: // B4
+            return map_zuiki(0xd1);
+        case 0x49: // B3
+            return map_zuiki(0xc3);
+        case 0x57: // B2
+            return map_zuiki(0xb6);
+        case 0x65: // B1
+            return map_zuiki(0xa8);
+        default: // N, P1, P2, P3, P4, P5
+            return GAMEPAD_JOYSTICK_MID;
+    }
+}
+
+uint16_t GamepadUSBHostListener::map_zuiki_lx(ZuikiMode mode, uint8_t value) {
+    if (mode == ZUIKI_NORMAL || mode == ZUIKI_DDG_REGULAR) {
+        return GAMEPAD_JOYSTICK_MID;
+    }
+
+    switch (value) {
+        case 0x9f: // P1
+            return map_zuiki(0x5a);
+        case 0xb7: // P2
+            return map_zuiki(0x48);
+        case 0xce: // P3
+            return map_zuiki(0x19);
+        case 0xe6: // P4
+            return map_zuiki(0x00);
+        case 0xff: // P5
+            return map_zuiki(0x00);
+        default: // EB, B8, B7, B6, B5, B4, B3, B2, B1, N
+            return GAMEPAD_JOYSTICK_MID;
+    }
+}
+
+uint16_t GamepadUSBHostListener::map_zuiki(uint8_t value) {
+    return map(value, 0, 255, GAMEPAD_JOYSTICK_MIN, GAMEPAD_JOYSTICK_MAX);
 }
 
 void GamepadUSBHostListener::setup_df_wheel() {
